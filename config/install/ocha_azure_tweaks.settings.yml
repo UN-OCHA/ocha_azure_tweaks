@@ -1,5 +1,5 @@
 disable_user_create: false
 openid_connect_client_id: 'application-id'
-password_url: 'https://tenant-name.b2clogin.com/tenant-name.onmicrosoft.com/policy-name/oauth2/v2.0/authorize?nonce=defaultNonce&scope=openid&response_type=code&prompt=login
+password_url: 'https://tenant-name.b2clogin.com/tenant-name.onmicrosoft.com/policy-name/oauth2/v2.0/authorize?nonce=defaultNonce&scope=openid&response_type=code&prompt=login'
 register_url: 'https://tenant-name.b2clogin.com/tenant-name.onmicrosoft.com/policy-name/oauth2/v2.0/authorize?nonce=defaultNonce&scope=openid&response_type=code&prompt=login'
 redirect_endpoint: 'openid-connect/client-id'
