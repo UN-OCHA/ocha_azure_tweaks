@@ -14,3 +14,6 @@ ocha_azure_tweaks.settings:
     register_url:
       type: string
       label: 'Register URL'
+    redirect_endpoint:
+      type: string
+      label: 'Redirect Endpoint'

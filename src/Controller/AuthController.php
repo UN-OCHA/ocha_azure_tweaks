@@ -16,9 +16,11 @@ class AuthController extends ControllerBase {
    */
   public function redirectRegister() {
     $url = $this->config('ocha_azure_tweaks.settings')->get('register_url');
-    $client_id = $this->config('aocha_zure_tweaks.settings')->get('openid_connect_client_id');
+    $client_id = $this->config('ocha_azure_tweaks.settings')->get('openid_connect_client_id');
+    $redirect_endpoint = $this->config('ocha_azure_tweaks.settings')->get('redirect_endpoint');
+    
     $redirect = Url::fromRoute('<front>')->setAbsolute()->toString();
-    $redirect .= 'openid-connect/azure_b2c_signin';
+    $redirect .= $redirect_endpoint;
 
     $url .= '&client_id=' . $client_id;
     $url .= '&redirect_uri=' . $redirect;
@@ -33,10 +35,12 @@ class AuthController extends ControllerBase {
    * Redirect the password reset page.
    */
   public function redirectResetPassword() {
-    $url = $this->config('aocha_zure_tweaks.settings')->get('password_url');
-    $client_id = $this->config('aocha_zure_tweaks.settings')->get('openid_connect_client_id');
+    $url = $this->config('ocha_azure_tweaks.settings')->get('password_url');
+    $client_id = $this->config('ocha_azure_tweaks.settings')->get('openid_connect_client_id');
+    $redirect_endpoint = $this->config('ocha_azure_tweaks.settings')->get('redirect_endpoint');
+
     $redirect = Url::fromRoute('<front>')->setAbsolute()->toString();
-    $redirect .= 'openid-connect/azure_b2c_signin';
+    $redirect .= $redirect_endpoint;
 
     $url .= '&client_id=' . $client_id;
     $url .= '&redirect_uri=' . $redirect;
