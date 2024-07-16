@@ -1,0 +1,7 @@
+services:
+  ocha_azure_tweaks.route_subscriber:
+    class: Drupal\ocha_azure_tweaks\Routing\RouteSubscriber
+    arguments:
+      - '@config.factory'
+    tags:
+      - { name: event_subscriber }

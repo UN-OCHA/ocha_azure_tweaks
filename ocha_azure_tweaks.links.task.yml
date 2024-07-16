@@ -1,0 +1,9 @@
+ocha_azure_tweaks.register:
+  route_name: ocha_azure_tweaks.register
+  base_route: user.page
+  title: 'Create new account'
+
+ocha_azure_tweaks.pass:
+  route_name: ocha_azure_tweaks.pass
+  base_route: user.page
+  title: 'Reset your password'
