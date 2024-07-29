@@ -3,30 +3,55 @@
 namespace Drupal\ocha_azure_tweaks\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Url;
+use Drupal\openid_connect\OpenIDConnectClaims;
+use Drupal\openid_connect\OpenIDConnectSessionInterface;
 
 /**
- * Returns responses for Social Auth Hid module routes.
+ * Returns responses for OpenID Connect Windows AAD module routes.
  */
 class AuthController extends ControllerBase {
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The OpenID Connect claims.
+   *
+   * @var \Drupal\openid_connect\OpenIDConnectClaims
+   */
+  protected $claims;
+
+  /**
+   * The OpenID Connect session service.
+   *
+   * @var \Drupal\openid_connect\OpenIDConnectSessionInterface
+   */
+  protected $session;
 
   /**
    * Redirect the user registration page.
    */
   public function redirectRegister() {
-    $url = $this->config('ocha_azure_tweaks.settings')->get('register_url');
-    $client_id = $this->config('ocha_azure_tweaks.settings')->get('openid_connect_client_id');
-    $redirect_endpoint = $this->config('ocha_azure_tweaks.settings')->get('redirect_endpoint');
-    
-    $redirect = Url::fromRoute('<front>')->setAbsolute()->toString();
-    $redirect .= $redirect_endpoint;
+    $client_id = $this->config('ocha_azure_tweaks.settings')->get('openid_register_client');
 
-    $url .= '&client_id=' . $client_id;
-    $url .= '&redirect_uri=' . $redirect;
+    $container = \Drupal::getContainer();
 
-    /** @var \Drupal\Core\Routing\TrustedRedirectResponse|\Symfony\Component\HttpFoundation\RedirectResponse $response */
-    $response = new TrustedRedirectResponse($url);
+    $this->entityTypeManager = $container->get('entity_type.manager');
+    $this->claims = $container->get('openid_connect.claims');
+    $this->session = $container->get('openid_connect.session');
+
+    $client = $this->entityTypeManager->getStorage('openid_connect_client')->loadByProperties(['id' => $client_id])[$client_id];
+    $plugin = $client->getPlugin();
+    $scopes = $this->claims->getScopes($plugin);
+    $this->session->saveOp('login');
+    $response = $plugin->authorize($scopes);
 
     return $response->send();
   }
@@ -35,18 +60,19 @@ class AuthController extends ControllerBase {
    * Redirect the password reset page.
    */
   public function redirectResetPassword() {
-    $url = $this->config('ocha_azure_tweaks.settings')->get('password_url');
-    $client_id = $this->config('ocha_azure_tweaks.settings')->get('openid_connect_client_id');
-    $redirect_endpoint = $this->config('ocha_azure_tweaks.settings')->get('redirect_endpoint');
+    $client_id = $this->config('ocha_azure_tweaks.settings')->get('openid_reset_client');
 
-    $redirect = Url::fromRoute('<front>')->setAbsolute()->toString();
-    $redirect .= $redirect_endpoint;
+    $container = \Drupal::getContainer();
 
-    $url .= '&client_id=' . $client_id;
-    $url .= '&redirect_uri=' . $redirect;
+    $this->entityTypeManager = $container->get('entity_type.manager');
+    $this->claims = $container->get('openid_connect.claims');
+    $this->session = $container->get('openid_connect.session');
 
-    /** @var \Drupal\Core\Routing\TrustedRedirectResponse|\Symfony\Component\HttpFoundation\RedirectResponse $response */
-    $response = new TrustedRedirectResponse($url);
+    $client = $this->entityTypeManager->getStorage('openid_connect_client')->loadByProperties(['id' => $client_id])[$client_id];
+    $plugin = $client->getPlugin();
+    $scopes = $this->claims->getScopes($plugin);
+    $this->session->saveOp('login');
+    $response = $plugin->authorize($scopes);
 
     return $response->send();
   }

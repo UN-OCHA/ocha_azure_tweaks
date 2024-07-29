@@ -5,15 +5,9 @@ ocha_azure_tweaks.settings:
     disable_user_create:
       type: bool
       label: 'Disable user create form'
-    openid_connect_client_id:
+    openid_register_client:
       type: string
       label: 'OpenID Client ID'
-    password_url:
+    openid_reset_client:
       type: string
-      label: 'Password reset url'
-    register_url:
-      type: string
-      label: 'Register URL'
-    redirect_endpoint:
-      type: string
-      label: 'Redirect Endpoint'
+      label: 'OpenID Client ID'
